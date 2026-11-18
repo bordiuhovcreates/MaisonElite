@@ -84,13 +84,21 @@ const fmt = (s: string) => esc(s).replace(/\{(.+?)\}/g, '<span class="pf__decor"
   }
 
   /* Точки слайдера */
-  .pf__dots { display: flex; justify-content: center; gap: calc(15 * var(--s)); margin-top: calc(60 * var(--s)); }
-  .pf__dots button {
-    width: calc(6 * var(--s)); height: calc(6 * var(--s)); padding: 0;
+  /* Кнопка — невидима зона натискання --tap-min (вимога доступності), сама точка 6 — у ::before.
+     Від'ємні відступи прибирають зайву висоту, тож точка стоїть там само, як у Figma */
+  .pf__dots {
+    --dot: calc(6 * var(--s));
+    display: flex; justify-content: center;
+    margin-top: calc(60 * var(--s) - (var(--tap-min) - var(--dot)) / 2);
+    margin-bottom: calc((var(--dot) - var(--tap-min)) / 2);
+  }
+  .pf__dots button { display: grid; place-items: center; width: var(--tap-min); height: var(--tap-min); padding: 0; }
+  .pf__dots button::before {
+    content: ''; width: var(--dot); height: var(--dot);
     border-radius: 50%; background: var(--color-dots); opacity: 0.66;
     transition: opacity var(--duration) var(--ease);
   }
-  .pf__dots button.is-active { opacity: 1; }
+  .pf__dots button.is-active::before { opacity: 1; }
 
   @media (min-width: 768px) {
     .pf { padding: 0 calc(var(--grid-offset) * var(--s)) calc(300 * var(--s)); }
