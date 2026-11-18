@@ -80,8 +80,7 @@ function initIntro() {
   window.scrollTo(0, 0);
   lenis?.scrollTo(0, { immediate: true });
 
-  gsap.fromTo('[data-hero-appear]', { opacity: 0, filter: 'blur(8px)' },
-    { opacity: 1, filter: 'blur(0px)', duration: 1.1, ease: 'power2.out', stagger: 0.12, clearProps: 'filter' });
+  // Поява [data-hero-appear] — у CSS (Block1.astro), щоб не чекати на скрипти
 }
 
 // Посилання на блоки (#block-6 тощо) — плавна прокрутка через Lenis, як і решта сторінки

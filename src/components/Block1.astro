@@ -10,10 +10,12 @@ const { hero } = home;
 
 // {o} — літера шрифтом Carl Brown
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const titleHtml = hero.title
-  .split('\n')
-  .map((line) =>
-    `<span class="hero__line" data-hero-appear="1">${esc(line)
+// Появу першого екрана веде CSS (без очікування JS — швидший LCP): --i — порядковий номер, як stagger у GSAP
+const titleLines = hero.title.split('\n');
+const appear = (k: number) => `--i:${titleLines.length + k}`;
+const titleHtml = titleLines
+  .map((line, i) =>
+    `<span class="hero__line" data-hero-appear="1" style="--i:${i}">${esc(line)
       .replace(/\{(.+?)\}/g, '<span class="hero__decor">$1</span>')}</span>`
   )
   .join('');
@@ -41,20 +43,20 @@ const masks = `--mask-d:url(${url('images/hero/logo-mask.png')});--mask-m:url(${
       <div class="hero__content" data-zoom="6" data-zoom-mobile="10" data-zoom-y-mobile="-3000" data-zoom-scrub="1" data-zoom-end="50%">
         <div class="hero__head">
           <h1 class="hero__title" set:html={titleHtml} />
-          <div class="hero__sub" data-hero-appear="2">
+          <div class="hero__sub" data-hero-appear="2" style={appear(0)}>
             <span>/</span>
             <p>{hero.subtitleLeft}</p>
             <p>{hero.subtitleRight}</p>
           </div>
-          <p class="hero__sub-m" data-hero-appear="2">{hero.subtitleMobile}</p>
+          <p class="hero__sub-m" data-hero-appear="2" style={appear(1)}>{hero.subtitleMobile}</p>
         </div>
 
-        <div class="hero__top" data-hero-appear="2">
+        <div class="hero__top" data-hero-appear="2" style={appear(2)}>
           <p>{hero.topLine}</p>
           <p>{hero.topText}</p>
         </div>
 
-        <div class="hero__num" data-hero-appear="2">
+        <div class="hero__num" data-hero-appear="2" style={appear(3)}>
           <p class="hero__count"><span>{hero.number}</span>{hero.numberSuffix}</p>
           <p class="hero__count-label">{hero.numberLabel}</p>
           <p class="hero__num-text">{hero.numberText}</p>
@@ -63,17 +65,25 @@ const masks = `--mask-d:url(${url('images/hero/logo-mask.png')});--mask-m:url(${
 
       <div class="hero__scroll">
         <div class="hero__scroll-in" data-zoom="2" data-zoom-y="450" data-zoom-scrub="0.2" data-zoom-end="50%">
-          <picture data-hero-appear="3">
+          <picture data-hero-appear="3" style={appear(4)}>
             <source media="(max-width: 767px)" srcset={url('images/hero/arrow-mobile.svg')} />
             <img src={url('images/hero/arrow.svg')} alt="" width="24" height="70" />
           </picture>
-          <p data-hero-appear="3">{hero.scroll}</p>
+          <p data-hero-appear="3" style={appear(5)}>{hero.scroll}</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 <style>
+  /* Поява першого екрана: прозорість 0→1 і блюр → 0, 1.1 с, по черзі через 0.12 с (як було в GSAP).
+     Стартує з першим кадром, а не після завантаження скриптів */
+  @keyframes hero-appear { from { opacity: 0; filter: blur(var(--blur-hero-appear)); } }
+  .hero :global([data-hero-appear]) {
+    animation: hero-appear var(--duration-hero-appear) var(--ease-hero-appear)
+      calc(var(--i, 0) * var(--stagger-hero-appear)) backwards;
+  }
+  @media (prefers-reduced-motion: reduce) { .hero :global([data-hero-appear]) { animation: none; } }
 
   /* --kh-h — висота картинки скважини (cover); центр отвору на 5.7% її висоти нижче центру екрана */
   .hero {
