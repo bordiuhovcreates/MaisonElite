@@ -478,8 +478,10 @@ function initDeferredImages() {
     if (el.dataset.deferSrcset) el.srcset = el.dataset.deferSrcset;
     if (el.dataset.deferSrc) el.src = el.dataset.deferSrc;
   });
-  if (document.readyState === 'complete') run();
-  else addEventListener('load', run, { once: true });
+  // після load — ще й дочекатися, поки браузер звільниться (перший екран уже намальований)
+  const later = () => ('requestIdleCallback' in window ? requestIdleCallback(run, { timeout: 1500 }) : setTimeout(run, 300));
+  if (document.readyState === 'complete') later();
+  else addEventListener('load', later, { once: true });
 }
 
 initDeferredImages();

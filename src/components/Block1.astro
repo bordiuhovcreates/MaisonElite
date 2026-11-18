@@ -78,7 +78,8 @@ const masks = `--mask-d:url(${url('images/hero/logo-mask.png')});--mask-m:url(${
 <style>
   /* Поява першого екрана: прозорість 0→1 і блюр → 0, 1.1 с, по черзі через 0.12 с (як було в GSAP).
      Стартує з першим кадром, а не після завантаження скриптів */
-  @keyframes hero-appear { from { opacity: 0; filter: blur(var(--blur-hero-appear)); } }
+  /* старт з 0.01, а не 0: на око те саме, але Chrome бачить текст із першого кадру (LCP не чекає кінця анімації) */
+  @keyframes hero-appear { from { opacity: 0.01; filter: blur(var(--blur-hero-appear)); } }
   .hero :global([data-hero-appear]) {
     animation: hero-appear var(--duration-hero-appear) var(--ease-hero-appear)
       calc(var(--i, 0) * var(--stagger-hero-appear)) backwards;
