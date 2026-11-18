@@ -54,7 +54,8 @@ const fontFaces = fonts
 
     <!-- Шрифти з макета: Helvetica Neue і Carl Brown (файли — у public/fonts) -->
     <style is:inline set:html={fontFaces}></style>
-    <link rel="preload" href={url('fonts/HelveticaNeue-Thin.woff2')} as="font" type="font/woff2" crossorigin />
+    <!-- усі шрифти потрібні на першому екрані: вантажимо одразу, разом зі стилями (швидший LCP) -->
+    {fonts.map((f) => <link rel="preload" href={url(`fonts/${f.file}.woff2`)} as="font" type="font/woff2" crossorigin />)}
     <slot name="head" />
   </head>
   <body style={`--noise:url(${url('images/noise.webp')})`}>

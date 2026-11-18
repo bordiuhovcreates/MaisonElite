@@ -23,7 +23,8 @@ const fmt = (s: string) => esc(s).replace(/\{(.+?)\}/g, '<span class="pf__decor"
         <li class="pf__card">
           <p class="pf__name" set:html={fmt(item.title)} />
           <div class="pf__photo">
-            <img src={url(item.image)} alt={item.title.replace(/\n/g, ' ')} width="800" height="1433" loading="lazy" draggable="false" />
+            <!-- loading — перед src: копії для слайдера (cloneNode) переносять атрибути по черзі, інакше фото вантажаться одразу -->
+            <img loading="lazy" src={url(item.image)} alt={item.title.replace(/\n/g, ' ')} width="800" height="1433" draggable="false" />
           </div>
           <p class="pf__meta"><span>{item.city}</span><span>{item.area}</span></p>
         </li>
