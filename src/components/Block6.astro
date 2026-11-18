@@ -27,7 +27,7 @@ const fmt = (s: string) => esc(s).replace(/\{(.+?)\}/g, '<span class="fb__decor"
     text-transform: uppercase;
   }
   .fb__text { display: flex; flex-direction: column; gap: calc(70 * var(--s)); }
-  .fb__desc { color: var(--color-content); font-size: calc(14 * var(--s)); line-height: 1; } /* рядок 14, як у Figma */
+  .fb__desc { color: var(--color-content-readable); font-size: calc(14 * var(--s)); line-height: 1; } /* рядок 14, як у Figma */
   /* текст зі зміщенням: відступ 49 (моб) / 67 (ПК) + проміжок 10 */
   .fb__desc-shift { width: calc((49 + 10 + 243) * var(--s)); padding-left: calc((49 + 10) * var(--s)); }
   .fb__title {
