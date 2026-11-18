@@ -478,8 +478,11 @@ function initDeferredImages() {
     if (el.dataset.deferSrcset) el.srcset = el.dataset.deferSrcset;
     if (el.dataset.deferSrc) el.src = el.dataset.deferSrc;
   });
-  // після load — ще й дочекатися, поки браузер звільниться (перший екран уже намальований)
-  const later = () => ('requestIdleCallback' in window ? requestIdleCallback(run, { timeout: 1500 }) : setTimeout(run, 300));
+  // старт — перший скрол/дотик/рух миші або через 2.5 с після load (перший екран уже намальований)
+  let done = false;
+  const go = () => { if (done) return; done = true; run(); };
+  ['scroll', 'wheel', 'touchstart', 'pointermove', 'keydown'].forEach((t) => addEventListener(t, go, { once: true, passive: true }));
+  const later = () => setTimeout(go, 2500);
   if (document.readyState === 'complete') later();
   else addEventListener('load', later, { once: true });
 }
