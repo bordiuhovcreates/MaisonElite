@@ -1,0 +1,194 @@
+---
+// Блок 1 — перший екран (Figma: «Главный экран» 239:6, мобільний 52:915).
+// Розміри — у пікселях макета × --s (автоскейл від ширини й висоти екрана).
+import home from '../content/home.json';
+import { url } from '../lib/url';
+import Block2 from './Block2.astro';
+const { hero } = home;
+
+// {o} — літера шрифтом Carl Brown
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const titleHtml = hero.title
+  .split('\n')
+  .map((line) =>
+    `<span class="hero__line" data-hero-appear="1">${esc(line)
+      .replace(/\{(.+?)\}/g, '<span class="hero__decor">$1</span>')}</span>`
+  )
+  .join('');
+
+const masks = `--mask-d:url(${url('images/hero/logo-mask.png')});--mask-m:url(${url('images/hero/logo-mask-mobile.png')})`;
+---
+<section class="hero" id="block-1" style={masks}>
+  <!-- data-zoom-end: зум триває перший екран прокрутки (як у Framer), далі — блок 2 -->
+  <div class="hero__track" data-zoom-track data-zoom-end="100%">
+    <div class="hero__sticky" data-zoom-sticky>
+      <Block2 />
+
+      <!-- Скважина як у Framer: картинка з легким блюром, зум 1 → 20 (Framer: базовий 2 × 0.5→10), плавність 2 с -->
+      <div class="hero__keyhole">
+        <div class="hero__zoom" data-zoom="20" data-zoom-scrub="2">
+          <img src={url('images/hero/keyhole.webp')} alt="" width="4000" height="2250" fetchpriority="high" />
+        </div>
+      </div>
+
+      <div class="hero__frame" data-zoom="10" data-zoom-scrub="1">
+        <img src={url('images/hero/frame-mobile.svg')} alt="" width="335" height="660" />
+      </div>
+
+      <!-- Як у Framer: текст розлітається ×6 (мобільний ×10 і вгору) за пів екрана прокрутки -->
+      <div class="hero__content" data-zoom="6" data-zoom-mobile="10" data-zoom-y-mobile="-3000" data-zoom-scrub="1" data-zoom-end="50%">
+        <div class="hero__head">
+          <h1 class="hero__title" set:html={titleHtml} />
+          <div class="hero__sub" data-hero-appear="2">
+            <span>/</span>
+            <p>{hero.subtitleLeft}</p>
+            <p>{hero.subtitleRight}</p>
+          </div>
+          <p class="hero__sub-m" data-hero-appear="2">{hero.subtitleMobile}</p>
+        </div>
+
+        <div class="hero__top" data-hero-appear="2">
+          <p>{hero.topLine}</p>
+          <p>{hero.topText}</p>
+        </div>
+
+        <div class="hero__num" data-hero-appear="2">
+          <p class="hero__count"><span>{hero.number}</span>{hero.numberSuffix}</p>
+          <p class="hero__count-label">{hero.numberLabel}</p>
+          <p class="hero__num-text">{hero.numberText}</p>
+        </div>
+      </div>
+
+      <div class="hero__scroll">
+        <div class="hero__scroll-in" data-zoom="2" data-zoom-y="450" data-zoom-scrub="0.2" data-zoom-end="50%">
+          <picture data-hero-appear="3">
+            <source media="(max-width: 767px)" srcset={url('images/hero/arrow-mobile.svg')} />
+            <img src={url('images/hero/arrow.svg')} alt="" width="24" height="70" />
+          </picture>
+          <p data-hero-appear="3">{hero.scroll}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+
+  /* --kh-h — висота картинки скважини (cover); центр отвору на 5.7% її висоти нижче центру екрана */
+  .hero {
+    --s: var(--u-screen);
+    --kh-h: max(100svh, 100vw * 700 / 375);
+    --hole-c: calc(50% + 0.057 * var(--kh-h));
+  }
+  .hero { position: relative; }
+  /* прокрутка: 1 екран — зум, 0.5 — фото в рамку, решта — пауза перед наступним блоком */
+  .hero__track { height: 300vh; }
+  .hero__sticky {
+    position: sticky; top: 0; height: 100svh; overflow: hidden;
+  }
+  /* Шари: 1 — фото (блок 2), 2 — логотип і шапка, 3 — скважина, 4 — рамка, 5 — текст, 6 — «Scroll down» */
+  /* Скважина накриває весь екран (cover), центр — по центру екрана */
+  /* Скважина накриває весь екран (cover), центр — по центру екрана */
+  .hero__keyhole {
+    position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 3;
+    height: var(--kh-h); aspect-ratio: 16 / 9;
+    pointer-events: none;
+  }
+  /* Як у Framer: легкий постійний блюр (у Framer 0.5px, тут трохи більше), росте разом із масштабом */
+  .hero__zoom { position: relative; width: 100%; height: 100%; filter: blur(1px); will-change: transform; }
+  .hero__zoom img { width: 100%; height: 100%; }
+
+  .hero__frame { position: absolute; inset: calc(20 * var(--s)); pointer-events: none; z-index: 4; }
+  .hero__frame img { width: 100%; height: 100%; }
+
+  .hero__content { position: absolute; inset: 0; z-index: 5; color: var(--color-beige); text-transform: uppercase; pointer-events: none; }
+  @media (min-width: 768px) {
+    /* Колонки сітки Figma від реальної ширини екрана: --col-N — початок N-ї колонки */
+    .hero__content {
+      --gut: calc(var(--grid-gutter) * var(--s));
+      --col-w: calc((100vw - (2 * var(--grid-offset) * var(--s)) - (var(--grid-cols) - 1) * var(--gut)) / var(--grid-cols));
+      --col-10: calc(var(--grid-offset) * var(--s) + 9 * (var(--col-w) + var(--gut)));
+      --col-12: calc(var(--grid-offset) * var(--s) + 11 * (var(--col-w) + var(--gut)));
+    }
+  }
+  /* Переноси — тільки там, де вони в тексті (як у Figma), без автопереносу */
+  .hero__content p, .hero__scroll p { font-size: calc(var(--hero-text) * var(--s)); line-height: 1; white-space: pre; }
+
+  .hero__head {
+    /* мобільний: низ тексту і початок стрілки — на однаковій відстані від центру отвору */
+    position: absolute; left: 50%; bottom: calc(100% - var(--hole-c) + 136 * var(--s)); translate: -50% 0;
+    width: calc(238 * var(--s));
+    display: flex; flex-direction: column; gap: calc(20 * var(--s));
+    text-align: center;
+  }
+  .hero__title {
+    font-size: calc(var(--hero-title) * var(--s));
+    font-weight: var(--weight-thin);
+    line-height: var(--hero-title-lh);
+    letter-spacing: -0.03em;
+    text-wrap: initial;
+  }
+  .hero__title :global(.hero__line) { display: block; }
+  .hero__title :global(.hero__decor) { font-family: var(--font-decor); font-weight: var(--weight-regular); }
+  .hero__sub-m { width: calc(228 * var(--s)); margin-inline: auto; }
+
+  .hero__sub, .hero__top, .hero__num { display: none; }
+
+  .hero__scroll {
+    position: absolute; left: 50%; top: calc(var(--hole-c) + 136 * var(--s)); translate: -50% 0;
+    color: var(--color-text-muted); text-transform: uppercase; white-space: nowrap;
+    pointer-events: none; z-index: 6;
+  }
+  .hero__scroll-in { display: flex; flex-direction: column; align-items: center; gap: calc(20 * var(--s)); }
+  .hero__scroll img { width: calc(20 * var(--s)); height: calc(57 * var(--s)); }
+
+  @media (min-width: 768px) {
+
+    .hero__track { height: 350vh; }
+    .hero { --kh-h: max(100svh, 100vw * 810 / 1440); }
+    .hero__frame, .hero__sub-m { display: none; }
+
+    .hero__head {
+      left: calc(110 * var(--s)); top: calc(50% - 295 * var(--s)); bottom: auto; translate: none;
+      width: calc(806 * var(--s)); gap: calc(28 * var(--s));
+      text-align: left;
+    }
+    .hero__title :global(.hero__line) { white-space: nowrap; }
+    .hero__title :global(.hero__line:first-child) { padding-left: 2em; }
+
+    .hero__sub { display: flex; align-items: flex-start; }
+    .hero__sub span { width: calc(77 * var(--s)); font-size: calc(var(--hero-text) * var(--s)); line-height: 1; }
+    .hero__sub p:nth-of-type(1) { width: calc(118 * var(--s)); }
+    .hero__sub p:nth-of-type(2) { width: calc(152 * var(--s)); margin-left: calc(36 * var(--s)); }
+
+    .hero__top {
+      display: block; position: absolute;
+      left: var(--col-10); top: calc(50% - 295 * var(--s));
+      width: calc(376 * var(--s));
+      color: var(--color-text-muted);
+    }
+    /* друга строка — з 12-ї колонки */
+    .hero__top p:last-child { width: calc(222 * var(--s)); margin-left: calc(var(--col-12) - var(--col-10)); }
+
+    .hero__num {
+      display: block; position: absolute;
+      left: var(--col-12); top: calc(50% - 16 * var(--s));
+      width: calc(345 * var(--s));
+      color: var(--color-text-muted);
+    }
+    .hero__num .hero__count {
+      font-size: calc(var(--hero-number) * var(--s));
+      font-weight: var(--weight-thin);
+      line-height: 1;
+    }
+    .hero__count span { letter-spacing: -0.05em; }
+    .hero__num .hero__count-label { margin: calc(-3 * var(--s)) 0 0 calc(4 * var(--s)); }
+    .hero__num .hero__num-text {
+      width: calc(187 * var(--s)); margin: calc(40 * var(--s)) 0 0 calc(158 * var(--s));
+      text-indent: 5.6em;
+    }
+
+    .hero__scroll { top: calc(50% + 180 * var(--s)); }
+    .hero__scroll-in { gap: calc(33 * var(--s)); }
+    .hero__scroll img { width: calc(24 * var(--s)); height: calc(70 * var(--s)); }
+  }
+</style>

@@ -1,0 +1,132 @@
+---
+// Блок 5 — «Selected projects» (Figma: ПК 17:444, мобільний 60:1374).
+// Анімації — як у Framer:
+//  • заголовок з золотого стає темним, коли він наполовину у видимій зоні (пружина bounce 0.2 / 1 с), і назад — при виході;
+//  • ПК: заголовок «прилипає» (sticky), картки проїжджають поверх нього; наведення — фото збільшується до 1.1 (bounce 0.1 / 1 с);
+//  • мобільний: слайдер карток з перетягуванням (пружина stiffness 200, damping 40) і точками.
+import home from '../content/home.json';
+import { url } from '../lib/url';
+const { portfolio } = home;
+
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const fmt = (s: string) => esc(s).replace(/\{(.+?)\}/g, '<span class="pf__decor">$1</span>').replace(/\n/g, '<br>');
+---
+<section class="pf" id="block-5">
+  <div class="pf__head" data-dim-on-view>
+    <p class="pf__label"><i>(</i> {portfolio.label} <i>)</i></p>
+    <h2 class="pf__title" set:html={fmt(portfolio.title)} />
+  </div>
+
+  <div class="pf__works" data-slider>
+    <ul class="pf__list" role="list" data-slider-track>
+      {portfolio.items.map((item) => (
+        <li class="pf__card">
+          <p class="pf__name" set:html={fmt(item.title)} />
+          <div class="pf__photo">
+            <img src={url(item.image)} alt={item.title.replace(/\n/g, ' ')} width="800" height="1433" loading="lazy" draggable="false" />
+          </div>
+          <p class="pf__meta"><span>{item.city}</span><span>{item.area}</span></p>
+        </li>
+      ))}
+    </ul>
+    <div class="pf__dots" data-slider-dots>
+      {portfolio.items.map((_, i) => (
+        <button type="button" aria-label={`Проєкт ${i + 1}`} class:list={{ 'is-active': i === 0 }} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .pf {
+    --s: var(--u);
+    padding: 0 calc(20 * var(--s)) calc(180 * var(--s));
+    overflow-x: clip;
+    text-transform: uppercase;
+  }
+
+  /* Заголовок */
+  .pf__head {
+    display: flex; flex-direction: column; align-items: center; gap: calc(30 * var(--s));
+    height: calc(189 * var(--s));
+    text-align: center; color: var(--color-beige); /* мобільний — завжди золотий */
+  }
+  .pf__label { font-size: calc(12 * var(--s)); line-height: 1; }
+  .pf__label i { font-style: italic; font-size: calc(16 * var(--s)); }
+  .pf__title {
+    font-size: calc(var(--portfolio-title) * var(--s));
+    font-weight: var(--weight-thin); line-height: 0.9; letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+  .pf :global(.pf__decor) { font-family: var(--font-decor); font-weight: var(--weight-regular); }
+
+  /* Картки (мобільний — слайдер) */
+  .pf__works { margin-top: calc(120 * var(--s)); }
+  .pf__list { display: flex; gap: calc(10 * var(--s)); width: max-content; touch-action: pan-y; user-select: none; will-change: transform; }
+  .pf__card {
+    --cw: 278; --ph: 405;
+    display: flex; flex-direction: column; align-items: flex-end; gap: calc(9.676 * var(--s));
+    width: calc(var(--cw) * var(--s)); flex: none;
+    font-size: calc(14 * var(--s)); line-height: 1; /* у Figma рядок = 14 px (назва з 2 рядків — 28) */
+  }
+  /* назва не переноситься сама: якщо ширша за картку — виходить ліворуч, як у Figma */
+  .pf__name { min-width: 100%; width: max-content; white-space: nowrap; color: var(--color-beige); }
+  .pf__photo { width: 100%; height: calc(var(--ph) * var(--s)); overflow: clip; background: var(--color-white); }
+  .pf__photo img {
+    width: 100%; height: 100%; max-width: none; object-fit: cover; pointer-events: none;
+    transition: scale var(--duration-spring) var(--ease-spring-b1);
+  }
+  .pf__meta { display: flex; gap: calc(8 * var(--s)); color: var(--color-content); white-space: nowrap; }
+  .pf__meta span { display: flex; align-items: center; gap: calc(4 * var(--s)); }
+  .pf__meta span::before {
+    content: ''; width: calc(6 * var(--s)); height: calc(6 * var(--s));
+    border-radius: 50%; background: var(--color-content);
+  }
+
+  /* Точки слайдера */
+  .pf__dots { display: flex; justify-content: center; gap: calc(15 * var(--s)); margin-top: calc(60 * var(--s)); }
+  .pf__dots button {
+    width: calc(6 * var(--s)); height: calc(6 * var(--s)); padding: 0;
+    border-radius: 50%; background: var(--color-dots); opacity: 0.66;
+    transition: opacity var(--duration) var(--ease);
+  }
+  .pf__dots button.is-active { opacity: 1; }
+
+  @media (min-width: 768px) {
+    .pf { padding: 0 calc(var(--grid-offset) * var(--s)) calc(300 * var(--s)); }
+
+    /* Заголовок прилипає — як «Портфоліо Бокс» у Framer: sticky top 0, відступи 150 зверху і 200 знизу.
+       Картки йдуть ПІСЛЯ цього бокса і наїжджають на нього вже при прокрутці */
+    .pf__head {
+      position: sticky; top: 0; z-index: 1;
+      width: calc(974 * var(--s)); height: auto; margin-inline: auto;
+      padding: calc(150 * var(--s)) 0 calc(200 * var(--s));
+      gap: calc(66 * var(--s));
+      transition: color var(--duration-spring) var(--ease-spring-b2);
+    }
+    .pf__head.is-dim { color: var(--color-stroke); }
+    .pf__label { font-size: calc(14 * var(--s)); }
+    .pf__label i { font-size: calc(18 * var(--s)); }
+
+    /* Картки розкидані, як у Figma: «Роботи» 1143 × 2581 */
+    .pf__works {
+      position: relative; z-index: 2;
+      width: calc(1143 * var(--s)); height: calc(2581 * var(--s));
+      margin-top: 0;
+    }
+    .pf__list { display: block; width: auto; transform: none !important; }
+    .pf__card { position: absolute; gap: calc(10 * var(--s)); }
+    .pf__card:nth-child(1) { --cw: 297; --ph: 434;     left: calc(769 * var(--s)); top: 0; }
+    .pf__card:nth-child(2) { --cw: 221; --ph: 323;     left: 0;                    top: calc(516 * var(--s)); }
+    .pf__card:nth-child(3) { --cw: 375; --ph: 548.077; left: calc(538 * var(--s)); top: calc(753 * var(--s)); }
+    .pf__card:nth-child(4) { --cw: 144; --ph: 210.462; left: calc(231 * var(--s)); top: calc(1434 * var(--s)); }
+    .pf__card:nth-child(5) { --cw: 221; --ph: 323;     left: calc(922 * var(--s)); top: calc(1537 * var(--s)); }
+    .pf__card:nth-child(6) { --cw: 375; --ph: 548.077; left: calc(308 * var(--s)); top: calc(1971 * var(--s)); }
+    .pf__card:nth-child(n + 7), .pf__card.is-clone { display: none; }
+    .pf__dots { display: none; }
+  }
+  @media (min-width: 768px) and (hover: hover) {
+    .pf__card { cursor: pointer; }
+    .pf__card:hover .pf__photo img { scale: 1.1; }
+  }
+</style>

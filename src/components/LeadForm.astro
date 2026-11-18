@@ -1,0 +1,195 @@
+---
+// Форма заявки (Figma: Форма 17:464 / 62:1458; поведінка — з Framer: Input + «Button 3»).
+// Дані йдуть у Google Apps Script як text/plain JSON: name, phone, email, message, service, website (пастка).
+// Адреса скрипта — FORM_ENDPOINT у site.config.mjs. Після успіху відкривається вікно подяки (Popup.astro).
+import { FORM_ENDPOINT } from '../../site.config.mjs';
+import home from '../content/home.json';
+import { url } from '../lib/url';
+
+interface Props {
+  service?: string; // назва форми в заявці
+}
+const { service = 'Форма' } = Astro.props;
+const { form } = home;
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const fmt = (s: string) => esc(s).replace(/\{(.+?)\}/g, '<span class="lf__decor">$1</span>').replace(/\n/g, '<br>');
+---
+<form class="lf" data-lead-form data-endpoint={FORM_ENDPOINT} data-error-fields={form.errorFields} data-error-send={form.errorSend} novalidate>
+  <div class="lf__fields">
+    <div class="lf__col">
+      <input class="lf__input" type="text" name="name" placeholder={form.name} aria-label={form.name} autocomplete="name" required />
+      <input class="lf__input" type="tel" name="phone" placeholder={form.phone} aria-label={form.phone} autocomplete="tel" inputmode="tel" required />
+      <input class="lf__input" type="email" name="email" placeholder={form.email} aria-label={form.email} autocomplete="email" required />
+    </div>
+    <textarea class="lf__input lf__area" name="message" placeholder={form.message} aria-label={form.message}></textarea>
+  </div>
+  <input type="hidden" name="service" value={service} />
+  <!-- Поле-пастка від спаму: людина його не бачить -->
+  <input type="text" name="website" class="lf__trap" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+  <button type="submit" class="lf__btn">
+    <span class="lf__btn-text" set:html={fmt(form.button)} />
+    {['out', 'in'].map((kind) => (
+      <span class={`lf__arrow lf__arrow--${kind}`} aria-hidden="true">
+        <picture>
+          <source media="(max-width: 767px)" srcset={url('images/approach/arrow-mobile.svg')} />
+          <img src={url('images/form/arrow.svg')} alt="" width="36" height="104" loading="lazy" />
+        </picture>
+      </span>
+    ))}
+    <span class="lf__spinner" aria-hidden="true"></span>
+  </button>
+  <p class="lf__error" role="alert" hidden></p>
+</form>
+
+<style>
+  .lf { --s: var(--u); display: flex; flex-direction: column; align-items: flex-start; gap: calc(50 * var(--s)); width: 100%; }
+  .lf__fields { display: flex; flex-direction: column; gap: calc(30 * var(--s)); width: 100%; }
+  .lf__col { display: flex; flex-direction: column; gap: calc(30 * var(--s)); }
+
+  /* Поле — як Input у Framer: текст 14, лінія знизу, при фокусі лінія стає золотою (0.5 с) */
+  .lf__input {
+    width: 100%; height: calc(34 * var(--s)); padding: 0 0 calc(20 * var(--s));
+    border: 0; border-bottom: 1px solid var(--color-stroke); border-radius: 0;
+    background: transparent; color: var(--color-beige);
+    font: inherit; font-size: calc(14 * var(--s)); line-height: 1.2; text-transform: uppercase;
+    transition: border-color 0.5s var(--ease-input);
+  }
+  .lf__input::placeholder { color: var(--color-content); opacity: 1; }
+  .lf__input:focus { outline: none; border-bottom-color: var(--color-beige); }
+  .lf__input[aria-invalid='true'] { border-bottom-color: var(--color-error); }
+  .lf__area { height: calc(171 * var(--s)); resize: none; padding-top: 0; }
+  .lf__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .lf__error { color: var(--color-error); font-size: calc(14 * var(--s)); text-transform: uppercase; }
+
+  /* Кнопка — «Button 3» у Framer: при наведенні перша стрілка йде вправо, друга виїжджає зліва (0.6 с);
+     натиснута / успіх — колір primary hover, помилка — червоний, надсилання — крутиться індикатор */
+  .lf__btn {
+    /* відступи як у Framer («Button 3» моб): блок 110, стрілка 72 × 28 на 1 px від низу → від тексту ~14 */
+    --aw: calc(72 * var(--s)); --ah: calc(28 * var(--s)); --ab: calc(1 * var(--s));
+    --out-to: translateX(calc(285 * var(--s))); --in-from: translateX(calc(-92 * var(--s)));
+    /* flex — щоб текст стояв угорі (звичайна кнопка центрує вміст по вертикалі) */
+    position: relative; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;
+    flex: none; overflow: clip;
+    width: calc(252 * var(--s)); height: calc(110 * var(--s));
+    color: var(--color-beige); text-align: left; text-transform: uppercase;
+    transition: color 0.6s var(--ease-form-button);
+  }
+  .lf__btn-text {
+    display: block; white-space: nowrap;
+    font-size: calc(var(--form-button) * var(--s)); font-weight: var(--weight-thin);
+    line-height: 0.9; letter-spacing: -0.03em;
+  }
+  .lf__btn-text :global(.lf__decor) { font-family: var(--font-decor); font-weight: var(--weight-regular); line-height: 0; }
+  .lf__arrow {
+    position: absolute; left: 0; bottom: var(--ab); width: var(--aw); height: var(--ah); pointer-events: none;
+    transition: transform 0.6s var(--ease-form-button), opacity 0.3s var(--ease-form-button);
+  }
+  .lf__arrow picture {
+    position: absolute; left: 50%; top: 50%; width: calc(var(--aw) * 0.36); height: var(--aw); max-width: none;
+    translate: -50% -50%; rotate: -90deg;
+  }
+  .lf__arrow img { width: 100%; height: 100%; max-width: none; }
+  .lf__arrow--in { transform: var(--in-from); }
+  .lf__btn:is(:hover, :focus-visible) .lf__arrow--out { transform: var(--out-to); }
+  .lf__btn:is(:hover, :focus-visible) .lf__arrow--in { transform: none; }
+  .lf__btn:active, .lf__btn.is-success { color: var(--color-beige-hover); }
+  .lf__btn.is-error { color: var(--color-error); }
+  .lf__btn:focus-visible { outline: 1px solid var(--color-beige); outline-offset: calc(10 * var(--s)); }
+
+  .lf__spinner {
+    position: absolute; left: 0; bottom: calc((var(--ah) - 20px) / 2); width: 20px; height: 20px;
+    border: 1px solid currentColor; border-right-color: transparent; border-radius: 50%;
+    opacity: 0; pointer-events: none;
+  }
+  .lf__btn.is-pending { pointer-events: none; }
+  .lf__btn.is-pending .lf__arrow { opacity: 0; }
+  .lf__btn.is-pending .lf__spinner { opacity: 1; animation: lf-spin 1s linear infinite; }
+  @keyframes lf-spin { to { rotate: 360deg; } }
+
+  @media (min-width: 768px) {
+    .lf { gap: calc(66 * var(--s)); }
+    .lf__fields { display: grid; grid-template-columns: 1fr 1fr; gap: calc(10 * var(--s)); }
+    .lf__col { gap: calc(40 * var(--s)); }
+    .lf__input { height: calc(40 * var(--s)); padding-bottom: calc(22 * var(--s)); }
+    .lf__area { height: auto; } /* тягнеться на висоту трьох полів, лінія — на рівні E-mail */
+    /* відступи як у Framer («Button 3»): блок 337 × 145, стрілка 101 × 35 знизу → від тексту 20 */
+    .lf__btn {
+      --aw: calc(101 * var(--s)); --ah: calc(35 * var(--s)); --ab: 0px;
+      --out-to: translateX(calc(356 * var(--s))); --in-from: translateX(calc(-120 * var(--s)));
+      width: calc(337 * var(--s)); height: calc(145 * var(--s));
+    }
+  }
+</style>
+
+<script>
+  import { openModal, closeModal } from '../scripts/modal.js';
+
+  const forms = document.querySelectorAll<HTMLFormElement>('[data-lead-form]');
+  const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+
+  forms.forEach((form) => {
+    const error = form.querySelector<HTMLElement>('.lf__error')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const setState = (state: '' | 'pending' | 'success' | 'error') => {
+      button.classList.remove('is-pending', 'is-success', 'is-error');
+      if (state) button.classList.add(`is-${state}`);
+    };
+    const showError = (text: string) => { error.textContent = text; error.hidden = false; setState('error'); };
+
+    // почав виправляти — прибираємо помилку
+    form.addEventListener('input', (e) => {
+      (e.target as HTMLElement).removeAttribute('aria-invalid');
+      if (button.classList.contains('is-error')) { setState(''); error.hidden = true; }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      error.hidden = true;
+
+      const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      const name = (data.name || '').trim();
+      const phone = (data.phone || '').trim();
+      const email = (data.email || '').trim();
+      const checks: [string, boolean][] = [
+        ['name', !!name],
+        ['phone', phone.replace(/\D/g, '').length >= 7],
+        ['email', isEmail(email)],
+      ];
+      checks.forEach(([field, ok]) => form.querySelector(`[name="${field}"]`)!.setAttribute('aria-invalid', String(!ok)));
+      if (checks.some(([, ok]) => !ok)) return showError(form.dataset.errorFields!);
+
+      setState('pending');
+      try {
+        const endpoint = form.dataset.endpoint;
+        if (endpoint) {
+          // text/plain — щоб браузер не блокував запит до Google (CORS)
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ ...data, name, phone, email, message: (data.message || '').trim() }),
+          });
+          const json = await res.json();
+          if (!json.ok) throw new Error(json.error || 'Помилка');
+        } else if (import.meta.env.DEV) {
+          // адреса ще не вказана — на локальному сервері імітуємо успіх, щоб перевірити попапи
+          console.warn('FORM_ENDPOINT порожній: заявка не надіслана (імітація успіху на локальному сервері)');
+          await new Promise((r) => setTimeout(r, 800));
+        } else {
+          throw new Error('FORM_ENDPOINT порожній: вкажіть URL Google Apps Script у site.config.mjs');
+        }
+
+        setState('success');
+        form.reset();
+        const popup = form.closest('dialog');
+        if (popup) closeModal(popup);
+        const thanks = document.querySelector<HTMLDialogElement>('[data-thanks-modal]');
+        if (thanks) openModal(thanks);
+        setTimeout(() => setState(''), 2000); // кнопка повертається до звичайного стану
+      } catch (err) {
+        console.error(err);
+        showError(form.dataset.errorSend!);
+      }
+    });
+  });
+</script>

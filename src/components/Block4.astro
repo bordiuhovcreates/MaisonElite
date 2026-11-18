@@ -1,0 +1,47 @@
+---
+// Блок 4 — бігучий рядок (Figma: ПК 16:351, мобільний 59:1246).
+// Рух — як Ticker у Framer: 100 px/с уліво, проміжок 10, можна тягнути мишкою/пальцем (data-marquee).
+import home from '../content/home.json';
+const { marquee } = home;
+---
+<section class="mq" id="block-4" aria-label={marquee.text}>
+  <div class="mq__band">
+    <div class="mq__track" data-marquee>
+      <div class="mq__row">
+        <p class="mq__item">{marquee.text}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mq {
+    --s: var(--u);
+    /* відступ до портфоліо — як у Figma (180 моб / 300 ПК) */
+    padding-bottom: calc(180 * var(--s));
+    overflow-x: clip;
+  }
+  .mq__band {
+    display: flex; flex-direction: column; gap: calc(8 * var(--s));
+    padding-block: calc(8 * var(--s));
+    border-block: 1px solid var(--color-stroke);
+  }
+  .mq__track { overflow: clip; touch-action: pan-y; cursor: grab; user-select: none; }
+  .mq__track:active { cursor: grabbing; }
+  .mq__row { display: flex; gap: calc(10 * var(--s)); width: max-content; will-change: transform; }
+  .mq__item {
+    flex: none;
+    height: calc(var(--marquee-title) * 0.7 * var(--s)); /* висота рядка в Figma — висота великих літер (65 / 163) */
+    font-family: var(--font-decor); font-weight: var(--weight-regular);
+    font-size: calc(var(--marquee-title) * var(--s));
+    line-height: 0.9; letter-spacing: -0.03em;
+    color: var(--color-content); text-transform: uppercase; white-space: nowrap;
+    text-box: trim-both cap alphabetic;
+  }
+
+  @media (min-width: 768px) {
+    /* 150 + 150 (верхній відступ бокса заголовка портфоліо) = 300, як у Figma */
+    .mq { padding-bottom: calc(150 * var(--s)); }
+    .mq__band { gap: calc(21 * var(--s)); padding-block: calc(21 * var(--s)); }
+  }
+</style>

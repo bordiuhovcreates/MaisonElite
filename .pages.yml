@@ -1,0 +1,311 @@
+# Налаштування адмінки Pages CMS (app.pagescms.org)
+# Тут описано, що клієнт може редагувати. Додаєте новий блок на сайт —
+# попросіть Claude додати його поля і сюди.
+
+media:
+  input: public/images
+  output: /images
+content:
+- name: settings
+  label: Налаштування сайту
+  type: file
+  path: src/content/settings.json
+  format: json
+  fields:
+  - name: seo
+    label: SEO
+    type: object
+    fields:
+    - name: title
+      label: Заголовок сторінки
+      type: string
+    - name: description
+      label: Опис для пошуку
+      type: text
+    - name: ogImage
+      label: Картинка для соцмереж (1200×630)
+      type: image
+  - name: header
+    label: Шапка
+    type: object
+    fields:
+    - name: logo
+      label: Текст логотипа
+      type: string
+    - name: button
+      label: Текст кнопки
+      type: string
+    - name: nav
+      label: Пункти меню
+      type: object
+      list: true
+      fields:
+      - name: label
+        label: Назва
+        type: string
+      - name: href
+        label: 'Посилання на блок, наприклад #block-3'
+        type: string
+  - name: contacts
+    label: Контакти
+    type: object
+    fields:
+    - name: phone
+      label: Телефон
+      type: string
+    - name: email
+      label: Email
+      type: string
+    - name: address
+      label: Адреса
+      type: string
+  - name: footer
+    label: Футер
+    type: object
+    fields:
+    - name: logo
+      label: Логотип (текст)
+      type: string
+    - name: copyright
+      label: Копірайт
+      type: string
+    - name: socials
+      label: Соцмережі
+      type: object
+      list: true
+      fields:
+      - name: label
+        label: Назва
+        type: string
+      - name: href
+        label: Посилання
+        type: string
+    - name: creditLabel
+      label: Підпис розробника (Website by:)
+      type: string
+    - name: creditName
+      label: Ім'я розробника
+      type: string
+    - name: creditHref
+      label: Посилання на розробника
+      type: string
+- name: home
+  label: Головна сторінка
+  type: file
+  path: src/content/home.json
+  format: json
+  fields:
+  - name: hero
+    label: Перший екран
+    type: object
+    fields:
+    - name: title
+      label: 'Заголовок (новий рядок — Enter; {o} — літера шрифтом Carl Brown)'
+      type: text
+    - name: subtitleLeft
+      label: 'Підзаголовок, ліва колонка (ПК). У всіх текстах першого екрана новий рядок — Enter'
+      type: text
+    - name: subtitleRight
+      label: Підзаголовок, права колонка (ПК)
+      type: text
+    - name: subtitleMobile
+      label: Підзаголовок (мобільний)
+      type: text
+    - name: topLine
+      label: Текст угорі праворуч, перший рядок
+      type: string
+    - name: topText
+      label: Текст угорі праворуч, другий рядок
+      type: text
+    - name: number
+      label: Цифра (наприклад 200)
+      type: number
+    - name: numberSuffix
+      label: Знак після цифри
+      type: string
+    - name: numberLabel
+      label: Підпис під цифрою
+      type: string
+    - name: numberText
+      label: Текст під цифрою
+      type: text
+    - name: scroll
+      label: Напис «Scroll down»
+      type: string
+  - name: approach
+    label: Блок «Our approach»
+    type: object
+    fields:
+    - name: label
+      label: Підпис над заголовком (у дужках)
+      type: string
+    - name: title
+      label: 'Заголовок, ПК (Enter — новий рядок; {o} — літера шрифтом Carl Brown; | — де закінчується золота частина)'
+      type: text
+    - name: titleMobile
+      label: Заголовок, мобільний (ті самі правила)
+      type: text
+    - name: items
+      label: Плашки 01 / 02
+      type: object
+      list: true
+      fields:
+      - name: num
+        label: Номер
+        type: string
+      - name: title
+        label: Назва
+        type: string
+      - name: text
+        label: Опис (Enter — новий рядок)
+        type: text
+    - name: button
+      label: 'Текст кнопки (Enter — новий рядок; {o} — Carl Brown)'
+      type: text
+  - name: transition
+    label: Фото після замкової щілини (змінюються одне за одним, перше видно крізь щілину)
+    type: object
+    fields:
+    - name: slides
+      label: Фото
+      type: object
+      list: true
+      fields:
+      - name: image
+        label: Фото (ПК, 1920×1080)
+        type: image
+      - name: imageMobile
+        label: Фото (мобільний)
+        type: image
+    - name: image
+      label: Зображення
+      type: image
+  - name: marquee
+    label: Бігучий рядок
+    type: object
+    fields:
+    - name: text
+      label: Текст рядка
+      type: string
+  - name: portfolio
+    label: Блок «Selected projects» (портфоліо)
+    type: object
+    fields:
+    - name: label
+      label: Підпис над заголовком (у дужках)
+      type: string
+    - name: title
+      label: 'Заголовок (Enter — новий рядок; {o} — літера шрифтом Carl Brown)'
+      type: text
+    - name: items
+      label: 'Проєкти (на ПК показуються перші 6 — кожен має своє місце й розмір)'
+      type: object
+      list: true
+      fields:
+      - name: title
+        label: Назва і стиль (Enter — новий рядок)
+        type: text
+      - name: city
+        label: Місто
+        type: string
+      - name: area
+        label: Площа
+        type: string
+      - name: image
+        label: Фото (вертикальне)
+        type: image
+  - name: facts
+    label: Цифри
+    type: object
+    list: true
+    fields:
+    - name: number
+      label: Число
+      type: number
+    - name: suffix
+      label: 'Знак після числа: + або %'
+      type: string
+    - name: label
+      label: Підпис
+      type: string
+  - name: featuresTitle
+    label: Заголовок блоку переваг
+    type: string
+  - name: features
+    label: Переваги
+    type: object
+    list: true
+    fields:
+    - name: title
+      label: Назва
+      type: string
+    - name: text
+      label: Опис
+      type: text
+    - name: image
+      label: Зображення
+      type: image
+  - name: faqTitle
+    label: Заголовок блоку питань
+    type: string
+  - name: faq
+    label: Питання та відповіді
+    type: object
+    list: true
+    fields:
+    - name: question
+      label: Питання
+      type: string
+    - name: answer
+      label: Відповідь
+      type: text
+  - name: form
+    label: Блок з формою (і попап з формою)
+    type: object
+    fields:
+    - name: label
+      label: Підпис зверху (Ready for change?)
+      type: string
+    - name: text
+      label: Текст під підписом
+      type: text
+    - name: title
+      label: 'Великий заголовок (Enter — новий рядок; {o} — літера шрифтом Carl Brown)'
+      type: text
+    - name: name
+      label: Підказка в полі «Ім'я»
+      type: string
+    - name: phone
+      label: Підказка в полі «Телефон»
+      type: string
+    - name: email
+      label: Підказка в полі «E-mail»
+      type: string
+    - name: message
+      label: Підказка в полі повідомлення
+      type: string
+    - name: button
+      label: 'Текст кнопки надсилання (Enter — новий рядок; {o} — Carl Brown)'
+      type: text
+    - name: errorFields
+      label: Помилка, якщо не заповнені обов'язкові поля
+      type: string
+    - name: errorSend
+      label: Помилка, якщо заявка не надіслалась
+      type: string
+  - name: thanks
+    label: Вікно подяки після заявки
+    type: object
+    fields:
+    - name: label
+      label: Підпис зверху (у дужках)
+      type: string
+    - name: title
+      label: 'Заголовок ({o} — літера шрифтом Carl Brown)'
+      type: string
+    - name: text
+      label: Текст
+      type: text
+    - name: button
+      label: Текст кнопки
+      type: string

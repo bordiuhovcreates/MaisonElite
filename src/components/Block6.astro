@@ -1,0 +1,52 @@
+---
+// Блок 6 — форма «Let's create something beautiful now» (Figma: ПК 57:994, мобільний 62:1460).
+import home from '../content/home.json';
+import LeadForm from './LeadForm.astro';
+const { form } = home;
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// пробіл перед <br>: на мобільному перенос прихований, і слова не мають злипатися
+const fmt = (s: string) => esc(s).replace(/\{(.+?)\}/g, '<span class="fb__decor">$1</span>').replace(/\s*\n/g, ' <br>');
+---
+<section class="fb" id="block-6">
+  <div class="fb__text">
+    <div class="fb__desc">
+      <p>{form.label}</p>
+      <p class="fb__desc-shift">{form.text}</p>
+    </div>
+    <h2 class="fb__title" set:html={fmt(form.title)} />
+  </div>
+  <div class="fb__form">
+    <LeadForm service="Форма внизу сторінки" />
+  </div>
+</section>
+
+<style>
+  .fb {
+    --s: var(--u);
+    padding: 0 calc(20 * var(--s)) calc(180 * var(--s));
+    text-transform: uppercase;
+  }
+  .fb__text { display: flex; flex-direction: column; gap: calc(70 * var(--s)); }
+  .fb__desc { color: var(--color-content); font-size: calc(14 * var(--s)); line-height: 1; } /* рядок 14, як у Figma */
+  /* текст зі зміщенням: відступ 49 (моб) / 67 (ПК) + проміжок 10 */
+  .fb__desc-shift { width: calc((49 + 10 + 243) * var(--s)); padding-left: calc((49 + 10) * var(--s)); }
+  .fb__title {
+    width: min-content; /* як у Figma: кожне слово з нового рядка (ширина — найдовше слово) */
+    color: var(--color-beige);
+    font-size: calc(var(--form-title) * var(--s)); font-weight: var(--weight-thin);
+    line-height: 0.9; letter-spacing: -0.03em;
+  }
+  .fb__title :global(br) { display: none; } /* на мобільному рядки переносяться самі */
+  /* line-height 0: інші метрики Carl Brown не розсувають рядки (висота як у Figma) */
+  .fb__title :global(.fb__decor) { font-family: var(--font-decor); font-weight: var(--weight-regular); line-height: 0; }
+  .fb__form { margin-top: calc(100 * var(--s)); }
+
+  @media (min-width: 768px) {
+    .fb { padding: 0 calc(var(--grid-offset) * var(--s)) calc(300 * var(--s)); }
+    .fb__text { flex-direction: row; justify-content: space-between; align-items: flex-start; gap: 0; }
+    .fb__desc-shift { width: calc((67 + 10 + 297) * var(--s)); padding-left: calc((67 + 10) * var(--s)); }
+    .fb__title { width: calc(759 * var(--s)); text-indent: calc(236 * var(--s)); } /* перший рядок зсунутий, як у Figma */
+    .fb__title :global(br) { display: inline; }
+    .fb__form { width: calc(759 * var(--s)); margin: calc(100 * var(--s)) 0 0 auto; }
+  }
+</style>

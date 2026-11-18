@@ -1,0 +1,178 @@
+{
+  "hero": {
+    "title": "A spa{c}e\nwhere perfe{c}ti{o}n\nis b{o}rn",
+    "subtitleLeft": "We create\ninteriors that",
+    "subtitleRight": "Become works\nof art. Premium\ndesign for those\nwho appreciate\nperfection\nin every detail",
+    "subtitleMobile": "We create interiors that. Become\nworks of art. Premium design for\nthose who appreciate perfection\nin every detail",
+    "topLine": "We don't design interiors.",
+    "topText": "We create spaces where life\nbecomes art",
+    "number": 200,
+    "numberSuffix": "+",
+    "numberLabel": "projects",
+    "numberText": "Implemented\nin Europe, the Middle\nEast, and North\nAmerica — each became\na unique work of art.",
+    "scroll": "Scroll down"
+  },
+  "approach": {
+    "label": "Our approach",
+    "title": "MAIS{O}N ÉLITE is a\nsynthesis {O}f\nar{c}hit|e{c}tural\nth{O}u{g}ht, artisti{c} taste,\nand te{c}hni{c}al\nperfe{c}ti{O}n",
+    "titleMobile": "MAIS{O}N ÉLITE is a\nsynthesis {O}f\nar{c}hit|e{c}tural\nth{O}u{g}ht,\nartisti{c} taste,\nand te{c}hni{c}al\nperfe{c}ti{O}n",
+    "items": [
+      {
+        "num": "01",
+        "title": "Flawlessness",
+        "text": "We work only with\nproven premium\nmaterials and the\nbest craftsmen in\nthe industry"
+      },
+      {
+        "num": "02",
+        "title": "Timelessness",
+        "text": "We create interiors\nthat are not\nsubject to fashion\nand remain relevant\nfor decades"
+      }
+    ],
+    "button": "Dis{c}uss\nTHE pr{o}je{c}ts"
+  },
+  "transition": {
+    "slides": [
+      {
+        "image": "/images/hero/interior.webp",
+        "imageMobile": "/images/hero/interior-mobile.webp"
+      },
+      {
+        "image": "/images/slides/slide-2.webp",
+        "imageMobile": "/images/slides/slide-2-mobile.webp"
+      },
+      {
+        "image": "/images/slides/slide-3.webp",
+        "imageMobile": "/images/slides/slide-3-mobile.webp"
+      },
+      {
+        "image": "/images/slides/slide-4.webp",
+        "imageMobile": "/images/slides/slide-4-mobile.webp"
+      },
+      {
+        "image": "/images/slides/slide-5.webp",
+        "imageMobile": "/images/slides/slide-5-mobile.webp"
+      },
+      {
+        "image": "/images/slides/slide-6.webp",
+        "imageMobile": "/images/slides/slide-6-mobile.webp"
+      },
+      {
+        "image": "/images/slides/slide-7.webp",
+        "imageMobile": "/images/slides/slide-7-mobile.webp"
+      },
+      {
+        "image": "/images/slides/slide-8.webp",
+        "imageMobile": "/images/slides/slide-8-mobile.webp"
+      }
+    ]
+  },
+  "marquee": {
+    "text": "Where every detail tells a story"
+  },
+  "portfolio": {
+    "label": "Selected projects",
+    "title": "MAIS{O}N\nÉLITE",
+    "items": [
+      {
+        "title": "MEDITERRANEAN BREEZE\n/ MEDITERRANEAN STYLE",
+        "city": "BARCELONA",
+        "area": "420 M²",
+        "image": "/images/portfolio/case-1.webp"
+      },
+      {
+        "title": "MONOCHROME\n/ MODERN CLASSIC",
+        "city": "London",
+        "area": "180 m²",
+        "image": "/images/portfolio/case-2.webp"
+      },
+      {
+        "title": "SCANDINAVIAN ELEGY\n/ MINIMALISM",
+        "city": "COPENHAGEN",
+        "area": "320 m²",
+        "image": "/images/portfolio/case-3.webp"
+      },
+      {
+        "title": "INDUSTRIAL POETRY\n/ INDUSTRIAL STYLE",
+        "city": "milan",
+        "area": "200 m²",
+        "image": "/images/portfolio/case-4.webp"
+      },
+      {
+        "title": "GOLDEN RATIO\n/ ART DECO",
+        "city": "PARIS",
+        "area": "250 m²",
+        "image": "/images/portfolio/case-5.webp"
+      },
+      {
+        "title": "URBAN SANCTUARY\n/ CONTEMPORARY",
+        "city": "London",
+        "area": "195 m²",
+        "image": "/images/portfolio/case-6.webp"
+      }
+    ]
+  },
+  "facts": [
+    {
+      "number": 15,
+      "suffix": "+",
+      "label": "років досвіду"
+    },
+    {
+      "number": 350,
+      "suffix": "+",
+      "label": "реалізованих проєктів"
+    },
+    {
+      "number": 98,
+      "suffix": "%",
+      "label": "задоволених клієнтів"
+    }
+  ],
+  "featuresTitle": "Переваги",
+  "features": [
+    {
+      "title": "Перевага 1",
+      "text": "Короткий опис переваги.",
+      "image": ""
+    },
+    {
+      "title": "Перевага 2",
+      "text": "Короткий опис переваги.",
+      "image": ""
+    },
+    {
+      "title": "Перевага 3",
+      "text": "Короткий опис переваги.",
+      "image": ""
+    }
+  ],
+  "faqTitle": "Питання та відповіді",
+  "faq": [
+    {
+      "question": "Перше питання?",
+      "answer": "Відповідь на перше питання."
+    },
+    {
+      "question": "Друге питання?",
+      "answer": "Відповідь на друге питання."
+    }
+  ],
+  "thanks": {
+    "label": "Your vision matters to us",
+    "title": "THANK Y{O}U",
+    "text": "We've received your request and will contact you within 24 hours to discuss your project in detail. Check your email for confirmation.",
+    "button": "Back to home"
+  },
+  "form": {
+    "label": "Ready for change?",
+    "text": "Contact us for a personalized consultation, and let's bring your vision to life",
+    "title": "LET'S {C}REATE S{O}METHIN{G}\nBEAUTIFUL N{O}W",
+    "name": "Name*",
+    "phone": "Phone*",
+    "email": "E-mail*",
+    "message": "How can we help you",
+    "button": "Dis{c}uss\nTHE pr{o}je{c}ts",
+    "errorFields": "Please fill in your name, phone and e-mail",
+    "errorSend": "Something went wrong. Please try again or call us."
+  }
+}

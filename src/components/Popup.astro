@@ -1,0 +1,80 @@
+---
+// Попап подяки після надсилання форми — UI-кіт Figma «Поп ап вікно» 260:150 / 260:111
+// (ПК 600 × 348, мобільний 336 × 418). Анімація затемнення й закриття — src/scripts/modal.js.
+import home from '../content/home.json';
+const { thanks } = home;
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const fmt = (s: string) => esc(s).replace(/\{(.+?)\}/g, '<span class="decor">$1</span>');
+---
+<dialog class="modal ty" data-thanks-modal aria-label={thanks.title.replace(/[{}]/g, '')}>
+  <div class="ty__box">
+    <button class="modal__close" type="button" data-modal-close aria-label="Закрити"><span></span></button>
+    <div class="ty__content">
+      <div class="ty__head">
+        <p class="ty__label"><i class="ty__open">(</i>{thanks.label.slice(0, -1)}<span class="ty__last">{thanks.label.slice(-1)}</span><i>)</i></p>
+        <p class="ty__title" set:html={fmt(thanks.title)} />
+      </div>
+      <p class="ty__text">{thanks.text}</p>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* Загальне для попапів */
+  .modal {
+    --s: var(--u);
+    margin: auto; padding: 0; border: 0; background: transparent; color: inherit;
+    max-width: none; max-height: none; overflow: visible;
+  }
+  .modal::backdrop { background: var(--color-overlay); animation: modal-in 0.3s var(--ease-overlay-in); }
+  .modal.is-closing::backdrop { opacity: 0; transition: opacity 0.3s var(--ease-overlay-out); }
+  .modal.is-closing > * { visibility: hidden; } /* саме вікно зникає одразу, як у Framer */
+  @keyframes modal-in { from { opacity: 0; } }
+
+  /* Хрестик — UI-кіт «close-line»: 30 × 30, справа зверху на 14; при наведенні значок 14 → 12 (0.2 с, Framer) */
+  .modal__close {
+    position: absolute; top: calc(14 * var(--s)); right: calc(14 * var(--s)); z-index: 1;
+    display: grid; place-items: center; width: calc(30 * var(--s)); height: calc(30 * var(--s));
+    color: inherit;
+  }
+  .modal__close span { position: relative; width: calc(14 * var(--s)); height: calc(14 * var(--s)); transition: width 0.2s var(--ease-overlay-out), height 0.2s var(--ease-overlay-out); }
+  .modal__close span::before, .modal__close span::after {
+    content: ''; position: absolute; left: 50%; top: 50%; width: 141%; height: 1px;
+    background: currentColor; translate: -50% -50%; rotate: 45deg;
+  }
+  .modal__close span::after { rotate: -45deg; }
+  .modal__close:hover span { width: calc(12 * var(--s)); height: calc(12 * var(--s)); }
+
+
+  /* Вікно подяки — UI-кіт «Поп ап вікно (моб)» 260:143: 336 × 418, по центру екрана */
+  .ty__box {
+    position: relative; width: calc(336 * var(--s)); height: calc(418 * var(--s));
+    background: var(--color-beige-light); color: var(--color-black); text-transform: uppercase; text-align: center;
+  }
+  .ty__content {
+    position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: max-content;
+    display: flex; flex-direction: column; align-items: center; gap: calc(20 * var(--s));
+  }
+  .ty__head { display: flex; flex-direction: column; align-items: center; gap: calc(15 * var(--s)); width: 100%; }
+  .ty__label { color: var(--color-content); font-size: calc(12 * var(--s)); line-height: 1.2; white-space: nowrap; }
+  .ty__label i { font-style: italic; font-weight: var(--weight-light); font-size: calc(16 * var(--s)); }
+  .ty__label .ty__open, .ty__last { letter-spacing: 0.33em; } /* інтервали після «(» і перед «)» — як у макеті */
+  .ty__last { letter-spacing: 0.44em; }
+  .ty__title {
+    width: calc(208 * var(--s)); color: var(--color-stroke);
+    font-size: calc(66 * var(--s)); font-weight: var(--weight-thin);
+    line-height: 0.9; letter-spacing: -0.03em;
+  }
+  .ty__title :global(.decor) { font-family: var(--font-decor); font-weight: var(--weight-regular); }
+  .ty__text { width: calc(186 * var(--s)); color: var(--color-content); font-size: calc(14 * var(--s)); line-height: 1.2; }
+
+  @media (min-width: 768px) {
+
+    .ty__box { width: calc(600 * var(--s)); height: calc(348 * var(--s)); }
+    .ty__content { gap: calc(33 * var(--s)); }
+    .ty__label { font-size: calc(14 * var(--s)); }
+    .ty__label i { font-size: calc(18 * var(--s)); }
+    .ty__title { width: auto; white-space: nowrap; font-size: calc(86 * var(--s)); }
+    .ty__text { width: calc(312 * var(--s)); }
+  }
+</style>

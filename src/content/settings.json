@@ -1,0 +1,55 @@
+{
+  "seo": {
+    "title": "MaisonElite",
+    "description": "Опис сайту для пошуку і соцмереж, 140–160 символів.",
+    "ogImage": "/images/og-image.jpg"
+  },
+  "header": {
+    "logo": "LOGO",
+    "button": "Залишити заявку",
+    "nav": [
+      {
+        "label": "Home",
+        "href": "#block-1"
+      },
+      {
+        "label": "About",
+        "href": "#block-3"
+      },
+      {
+        "label": "Portfolio",
+        "href": "#block-5"
+      }
+    ]
+  },
+  "contacts": {
+    "phone": "+44 20 7946 0832",
+    "email": "hello@maisonelite.com",
+    "address": "м. Київ, вул. Прикладна, 1"
+  },
+  "footer": {
+    "logo": "MÉ",
+    "copyright": "© 2025 MAISON ÉLITE. All rights reserved",
+    "socials": [
+      {
+        "label": "Instagram",
+        "href": "#"
+      },
+      {
+        "label": "Pinterest",
+        "href": "#"
+      },
+      {
+        "label": "Behance",
+        "href": "#"
+      },
+      {
+        "label": "LinkedIn",
+        "href": "#"
+      }
+    ],
+    "creditLabel": "Website by:",
+    "creditName": "Vladlen Bordiuhov",
+    "creditHref": "https://www.instagram.com/bordiuhovcreates/"
+  }
+}

@@ -1,0 +1,54 @@
+---
+// Шапка з меню і бургером. Посилання меню ведуть до блоків за їх id.
+import settings from '../content/settings.json';
+import { url } from '../lib/url';
+
+const links = settings.header.nav;
+---
+<header class="header">
+  <div class="container header__inner">
+    <a href={url('/')} class="header__logo">{settings.header.logo}</a>
+
+    <nav class="header__nav" data-nav aria-label="Головне меню">
+      <ul role="list">
+        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+      <a href={`tel:${settings.contacts.phone.replace(/\s/g, '')}`} class="header__phone">{settings.contacts.phone}</a>
+    </nav>
+
+    <button class="btn header__btn" data-popup-open="Шапка">{settings.header.button}</button>
+
+    <button class="header__burger" data-burger aria-label="Меню" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .header { position: sticky; top: 0; z-index: 50; background: var(--color-bg); border-bottom: 1px solid var(--color-border); }
+  .header__inner { display: flex; align-items: center; gap: var(--space-4); height: var(--header-height); }
+  .header__logo { font-weight: var(--weight-bold); font-size: 20px; }
+  .header__nav { display: flex; align-items: center; gap: var(--space-4); margin-left: auto; }
+  .header__nav ul { display: flex; gap: var(--space-3); }
+  .header__nav a:hover { color: var(--color-text-muted); }
+  .header__btn { min-height: 44px; }
+  .header__burger { display: none; width: 44px; height: 44px; position: relative; }
+  .header__burger span { position: absolute; left: 10px; right: 10px; height: 2px; background: var(--color-black); transition: transform var(--duration) var(--ease); }
+  .header__burger span:first-child { top: 17px; }
+  .header__burger span:last-child { top: 25px; }
+
+  @media (max-width: 900px) {
+    .header__btn { display: none; }
+    .header__burger { display: block; margin-left: auto; }
+    .header__nav {
+      position: fixed; inset: var(--header-height) 0 0 0; flex-direction: column; align-items: flex-start;
+      padding: var(--space-4) var(--gutter); background: var(--color-bg);
+      transform: translateX(100%); transition: transform var(--duration) var(--ease);
+    }
+    .header__nav ul { flex-direction: column; font-size: var(--h3-size); }
+    :global(body.nav-open) .header__nav { transform: none; }
+    :global(body.nav-open) { overflow: hidden; }
+    :global(body.nav-open) .header__burger span:first-child { transform: translateY(4px) rotate(45deg); }
+    :global(body.nav-open) .header__burger span:last-child { transform: translateY(-4px) rotate(-45deg); }
+  }
+</style>

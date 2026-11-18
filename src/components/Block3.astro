@@ -1,0 +1,165 @@
+---
+// Блок 3 — «Our approach» (Figma: ПК 56:980, мобільний 59:1240). Сітка ПК — 16 колонок, як у макеті.
+import home from '../content/home.json';
+import { url } from '../lib/url';
+const { approach } = home;
+
+// Розмітка заголовка: {o} — літера Carl Brown, | — кінець бежевої частини, новий рядок — перенос
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const fmt = (s: string) => esc(s).replace(/\{(.+?)\}/g, '<span class="ap__decor">$1</span>').replace(/\n/g, '<br>');
+const title = (s: string) => {
+  const [accent, rest = ''] = s.split('|');
+  return `<span class="ap__accent">${fmt(accent)}</span>${fmt(rest)}`;
+};
+---
+<section class="ap" id="block-3">
+  <div class="ap__head">
+    <p class="ap__label" data-anim="chars"><i>(</i> {approach.label} <i>)</i></p>
+    <!-- Як у Framer (TextReveal): слова по черзі заливаються з темного в золото за прокруткою -->
+    <h2 class="ap__title" data-anim="reveal">
+      <span class="ap__t-d" set:html={title(approach.title)} />
+      <span class="ap__t-m" set:html={title(approach.titleMobile)} />
+    </h2>
+  </div>
+
+  <ul class="ap__cards" role="list" data-rise-group>
+    {approach.items.map((item, i) => (
+      <li class="ap__card" data-anim="rise" data-delay={i === 0 ? '0.2' : '0.6'} data-start={i === 0 ? 'bottom bottom' : 'center bottom'}>
+        <p class="ap__num"><i>(</i> <span>{item.num}</span> <i>)</i></p>
+        <p class="ap__card-title">{item.title}</p>
+        <p class="ap__card-text">{item.text}</p>
+      </li>
+    ))}
+  </ul>
+
+  <a class="ap__btn" href="#block-6">
+    <span class="ap__btn-text" set:html={fmt(approach.button)} />
+    {['out', 'in'].map((kind) => (
+      <span class={`ap__arrow ap__arrow--${kind}`} aria-hidden="true">
+        <picture>
+          <source media="(max-width: 767px)" srcset={url('images/approach/arrow-mobile.svg')} />
+          <img src={url('images/approach/arrow.svg')} alt="" width="62" height="180" loading="lazy" />
+        </picture>
+      </span>
+    ))}
+  </a>
+</section>
+
+<style>
+  .ap {
+    --s: var(--u);
+    /* відступ від фото блоку 2 (у макеті 160 моб / 199 ПК під фото) */
+    padding: max(0px, calc(378.5 * var(--s) - 50svh)) calc(20 * var(--s)) calc(180 * var(--s));
+    text-transform: uppercase;
+    font-size: calc(var(--hero-text) * var(--s));
+    line-height: 1;
+  }
+  .ap i { font-style: italic; }
+
+  /* Заголовок */
+  .ap__head { display: flex; flex-direction: column; align-items: center; gap: calc(30 * var(--s)); text-align: center; }
+  .ap__label { color: var(--color-beige); font-size: calc(12 * var(--s)); }
+  .ap__label i { font-size: calc(16 * var(--s)); }
+  .ap__title {
+    font-size: calc(var(--approach-title) * var(--s));
+    font-weight: var(--weight-thin);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: var(--color-content);
+    white-space: nowrap;
+    text-wrap: initial;
+  }
+  .ap__title :global(.ap__accent) { color: var(--color-beige); }
+  .ap__title :global(.ap__decor) { font-family: var(--font-decor); font-weight: var(--weight-regular); }
+  .ap__t-d { display: none; }
+
+  /* Картки 01 / 02 */
+  .ap__cards { display: flex; flex-direction: column; gap: calc(44 * var(--s)); margin-top: calc(80 * var(--s)); }
+  .ap__card {
+    display: grid; grid-template-columns: auto 1fr; column-gap: calc(140 * var(--s)); row-gap: calc(10 * var(--s));
+    padding-top: calc(6 * var(--s)); border-top: 1px solid var(--color-stroke);
+  }
+  .ap__num { grid-row: 1 / span 2; color: var(--color-beige); font-style: italic; }
+  .ap__num i { font-size: calc(18 * var(--s)); }
+  .ap__num span { letter-spacing: -0.08em; }
+  .ap__card-title { color: var(--color-beige); align-self: center; }
+  .ap__card-text { color: var(--color-content); white-space: pre; }
+
+  /* Кнопка «Discuss the projects» — як компонент «Кнопка основна / моб» у Framer:
+     дві стрілки в кнопці з overflow: clip. При наведенні перша їде вправо, друга виїжджає зліва
+     на її місце. Пружина bounce 0, duration 1. */
+  .ap__btn {
+    /* flex — щоб текст стояв угорі (звичайна кнопка центрує вміст по вертикалі) */
+    position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;
+    overflow: clip;
+    width: calc(252 * var(--s)); height: calc(102 * var(--s));
+    margin-top: calc(100 * var(--s));
+    color: var(--color-beige); text-align: left; text-transform: uppercase;
+  }
+  .ap__btn-text {
+    font-size: calc(var(--approach-title) * var(--s));
+    font-weight: var(--weight-thin);
+    line-height: 0.9; letter-spacing: -0.03em; white-space: nowrap;
+  }
+  /* line-height 0: інші метрики шрифту Carl Brown не розсувають рядок (висота тексту як у Figma: 68 / 154) */
+  .ap__btn-text :global(.ap__decor) { font-family: var(--font-decor); font-weight: var(--weight-regular); line-height: 0; }
+  .ap__btn-text { display: block; }
+  .ap__arrow {
+    --aw: calc(72 * var(--s)); --ah: calc(26 * var(--s));
+    /* позиція — як у Figma (знизу зліва); рух — з Framer: моб. перша 0 → 260, друга −80 → 0 */
+    --out-from: translate(0, 0); --out-to: translate(calc(260 * var(--s)), 0);
+    --in-from: translate(calc(-80 * var(--s)), 0); --in-to: translate(0, 0);
+    position: absolute; left: 0; bottom: 0;
+    display: block; width: var(--aw); height: var(--ah);
+    pointer-events: none;
+    transition: transform var(--duration-spring) var(--ease-spring);
+  }
+  .ap__arrow--out { transform: var(--out-from); }
+  .ap__arrow--in { transform: var(--in-from); }
+  /* стрілка з Figma вертикальна (62×180) — повертаємо на −90° */
+  .ap__arrow picture {
+    position: absolute; left: 50%; top: 50%; width: var(--ah); height: var(--aw); max-width: none;
+    translate: -50% -50%; rotate: -90deg;
+  }
+  .ap__arrow img { width: 100%; height: 100%; max-width: none; }
+  .ap__btn:is(:hover, :active, :focus-visible) .ap__arrow--out { transform: var(--out-to); }
+  .ap__btn:is(:hover, :active, :focus-visible) .ap__arrow--in { transform: var(--in-to); }
+  .ap__btn:focus-visible { outline: 1px solid var(--color-beige); outline-offset: calc(10 * var(--s)); }
+
+  @media (min-width: 768px) {
+    .ap {
+      /* 16 колонок: поля 110, проміжок 10 */
+      display: grid; grid-template-columns: repeat(var(--grid-cols), 1fr);
+      column-gap: calc(var(--grid-gutter) * var(--s));
+      padding: max(0px, calc(455.5 * var(--s) - 50svh)) calc(var(--grid-offset) * var(--s)) calc(300 * var(--s));
+    }
+    .ap__head { grid-column: 1 / -1; gap: calc(66 * var(--s)); }
+    .ap__label { font-size: calc(14 * var(--s)); }
+    .ap__label i { font-size: calc(18 * var(--s)); }
+    .ap__t-d { display: inline; }
+    .ap__t-m { display: none; }
+
+    .ap__cards { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; gap: 0 calc(var(--grid-gutter) * var(--s)); margin-top: calc(160 * var(--s)); }
+    .ap__card {
+      grid-template-columns: subgrid; grid-template-rows: auto; column-gap: calc(var(--grid-gutter) * var(--s));
+      align-items: start;
+    }
+    .ap__card:nth-child(1) { grid-column: 8 / span 8; }
+    .ap__card:nth-child(2) { grid-column: 2 / span 8; margin-top: calc(71.5 * var(--s)); }
+    .ap__num { grid-row: 1; grid-column: 1; }
+    .ap__card-title { grid-row: 1; grid-column: 2 / span 4; }
+    .ap__card-text { grid-row: 1; grid-column: 6 / span 3; }
+
+    .ap__btn {
+      grid-column: 9 / span 8; justify-self: start;
+      width: calc(566 * var(--s)); height: calc(248 * var(--s)); margin-top: calc(170 * var(--s));
+    }
+    /* ПК: спокій — як у Figma (знизу зліва); рух з Framer — перша на 582 вправо (за край),
+       друга виїжджає з −323.5 на місце */
+    .ap__arrow {
+      --aw: calc(175 * var(--s)); --ah: calc(61 * var(--s));
+      --out-to: translate(calc(582 * var(--s)), 0);
+      --in-from: translate(calc(-323.5 * var(--s)), 0);
+    }
+  }
+</style>

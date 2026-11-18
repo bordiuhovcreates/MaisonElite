@@ -1,0 +1,93 @@
+---
+// Футер (Figma: ПК 41:914, мобільний 65:21).
+// Телефон і пошта — як «Footer Link» у Framer: при наведенні текст прокручується вгору,
+// на його місце виїжджає такий самий знизу (пружина bounce 0.2 / 0.4 с).
+import settings from '../content/settings.json';
+const { contacts, footer } = settings;
+const links = [
+  { label: contacts.phone, href: `tel:${contacts.phone.replace(/\s/g, '')}` },
+  { label: contacts.email, href: `mailto:${contacts.email}` },
+];
+---
+<footer class="ft">
+  <div class="ft__top">
+    <!-- клік — плавно на перший екран (Lenis, animations.js) -->
+    <a class="ft__logo" href="#block-1" aria-label="На початок сторінки">{footer.logo}</a>
+    <div class="ft__contacts">
+      {links.map((l) => (
+        <a class="ft__roll" href={l.href}>
+          <span>{l.label}</span>
+          <span aria-hidden="true">{l.label}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+  <div class="ft__bottom">
+    <p class="ft__copy">{footer.copyright}</p>
+    <div class="ft__right">
+      <ul class="ft__socials" role="list">
+        {footer.socials.map((s) => (
+          <li><a class="ui-link" href={s.href} target="_blank" rel="noopener">{s.label}</a></li>
+        ))}
+      </ul>
+      <p class="ft__credit">
+        <span>{footer.creditLabel}</span>
+        <a class="ui-link" href={footer.creditHref} target="_blank" rel="noopener">{footer.creditName}</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ft {
+    --s: var(--u);
+    display: flex; flex-direction: column; align-items: center; gap: calc(50 * var(--s));
+    padding: 0 calc(24 * var(--s)) calc(20 * var(--s));
+    color: var(--color-beige); text-transform: uppercase; text-align: center;
+    font-size: calc(14 * var(--s)); line-height: 1; /* рядок 14, як у Figma */
+  }
+  .ft__roll, .ft__logo { color: inherit; }
+  .ft__logo { display: block; }
+  /* мобільний — варіант «Footer Mobile»: золоті, наведення — primary hover */
+  .ft .ui-link { color: var(--color-beige); }
+  .ft .ui-link:is(:hover, :active) { color: var(--color-beige-hover); }
+
+  /* Лого і контакти */
+  .ft__top, .ft__bottom, .ft__right { display: contents; }
+  .ft__logo, .ft__contacts {
+    font-size: calc(var(--footer-title) * var(--s)); font-weight: var(--weight-light);
+    line-height: 0.9; letter-spacing: -0.03em;
+  }
+  .ft__contacts { display: flex; flex-direction: column; align-items: center; }
+  .ft__roll { position: relative; display: block; height: 0.9em; overflow: clip; }
+  .ft__roll span { display: block; transition: translate 0.4s var(--ease-spring-b2); }
+  .ft__roll span + span { position: absolute; left: 0; right: 0; top: 200%; }
+  .ft__roll:is(:hover, :focus-visible) span { translate: 0 -200%; }
+
+  .ft__copy { width: calc(156 * var(--s)); }
+  .ft__socials { display: flex; flex-direction: column; align-items: center; gap: calc(22 * var(--s)); }
+  .ft__credit { display: flex; flex-direction: column; align-items: center; }
+  .ft__credit a { text-decoration: underline; text-underline-position: from-font; }
+
+  @media (min-width: 768px) {
+    .ft {
+      align-items: stretch; gap: calc(110 * var(--s)); text-align: left;
+      padding: 0 calc(var(--grid-offset) * var(--s)) calc(113 * var(--s));
+    }
+    .ft__top { display: flex; justify-content: space-between; width: calc(862 * var(--s)); }
+    .ft__contacts { width: calc(401 * var(--s)); align-items: flex-start; }
+    .ft__bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--color-content); white-space: nowrap;
+    }
+    .ft__copy { width: auto; }
+    .ft__right { display: flex; align-items: center; gap: calc(77 * var(--s)); }
+    .ft__socials { flex-direction: row; gap: calc(33 * var(--s)); }
+    .ft__credit { flex-direction: row; gap: calc(62 * var(--s)); }
+    .ft__credit a { text-decoration: none; }
+    /* ПК — «Link Header» з UI-кіта: дефолт / наведення / натискання */
+    .ft .ui-link { color: var(--color-content); }
+    .ft .ui-link:hover { color: var(--color-text-main-screen); }
+    .ft .ui-link:active { color: var(--color-beige); }
+  }
+</style>

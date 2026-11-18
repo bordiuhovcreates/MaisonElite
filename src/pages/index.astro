@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Block1 from '../components/Block1.astro';
+import Block3 from '../components/Block3.astro';
+import Block4 from '../components/Block4.astro';
+import Block5 from '../components/Block5.astro';
+import Block6 from '../components/Block6.astro';
+import Footer from '../components/Footer.astro';
+import Popup from '../components/Popup.astro';
+---
+<Base>
+  {/* Шапка-заготовка перекриває перший екран — повернемо, коли зверстаємо шапку за макетом */}
+  {false && <Header />}
+  <main>
+    <Block1 />
+    <Block3 />
+    <Block4 />
+    <Block5 />
+    <Block6 />
+  </main>
+  <Footer />
+  <Popup />
+</Base>

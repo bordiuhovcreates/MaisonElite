@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import home from '../content/home.json';
+import { url } from '../lib/url';
+const { thanks } = home;
+const title = thanks.title.replace(/[{}]/g, ''); // {o} — розмітка шрифту, тут не потрібна
+---
+<Base title={title} noindex>
+  <main class="thanks container">
+    <h1 class="t-h1">{title}</h1>
+    <p>{thanks.text}</p>
+    <a class="btn" href={url('/')}>{thanks.button}</a>
+  </main>
+</Base>
+
+<style>
+  .thanks { min-height: 100svh; display: grid; place-content: center; justify-items: center; gap: var(--space-3); text-align: center; }
+  .thanks p { color: var(--color-text-muted); }
+</style>

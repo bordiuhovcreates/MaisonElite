@@ -1,0 +1,137 @@
+/*
+  Змінні проєкту з UI-кіта Figma (maisonelite → UI-Kit).
+  Нові кольори й розміри в коді не з'являються — тільки через ці змінні.
+*/
+:root {
+  /* Кольори з макета */
+  --color-dark-green: #101711; /* dark green (bg) */
+  --color-stroke: #242d25;     /* stroke */
+  --color-content: #313b33;    /* content */
+  --color-text-main-screen: #425a42; /* text main screen */
+  --color-beige: #ffd28f;      /* primary beige */
+  --color-beige-hover: #ffc74d; /* primary hover */
+  --color-white: #ffffff;
+  --color-reveal-dim: #1e1e1e; /* темна частина заливки заголовка (TextReveal у Framer) */
+  --color-beige-light: #ffecd0; /* фон вікна подяки (Framer: Modal) */
+  --color-error: #fa4a2a;       /* помилка у формі (Framer: кнопка Error) */
+  --color-overlay: rgb(16 23 17 / 0.9); /* затемнення під попапом (Framer: #101711e6) */
+  --color-dots: #4a594d;       /* точки пагінації слайдера (Figma: Пагінація) */
+  --color-cursor: var(--color-beige);
+  --cursor-duration: 0.375s;                      /* як на Shark Agency */
+  --cursor-ease: cubic-bezier(0.625, 0.05, 0, 1); /* курсор — фірмовий колір (як у логотипі й телефоні) */
+
+  /* Ролі кольорів (використовуються в шаблоні) */
+  --color-accent: var(--color-beige);
+  --color-accent-hover: var(--color-beige-hover);
+  --color-black: var(--color-dark-green);
+  --color-bg: var(--color-dark-green);
+  --color-bg-gray: var(--color-content);
+  --color-text: var(--color-white);
+  --color-text-muted: var(--color-text-main-screen);
+  --color-border: var(--color-stroke);
+
+  /* Шрифти */
+  --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-decor: 'Carl Brown', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* Стилі тексту (десктоп, з UI-кіта): розмір / висота рядка */
+  --letter-spacing: -0.03em;
+
+  --display-size: 86px; /* decor title — Carl Brown */
+  --display-lh: 0.9;
+  --h1-size: 86px;      /* h1 — Helvetica Neue Thin */
+  --h1-lh: 0.9;
+  --h2-size: 86px;      /* h2 — Helvetica Neue Thin */
+  --h2-lh: 0.9;
+  --h3-size: 33px;      /* footer contact — Helvetica Neue Light */
+  --h3-lh: 1.2;
+  --number-size: 86px;
+  --label-size: 18px;   /* label italic — Helvetica Neue Italic */
+  --label-lh: 1.2;
+  --menu-size: 16px;    /* header menu — Helvetica Neue Regular */
+  --menu-lh: 1.2;
+  --body-size: 14px;    /* paragraph — Helvetica Neue Regular */
+  --body-lh: 1.2;
+  --caption-size: 14px;
+  --button-size: 16px;
+
+  --weight-thin: 100;
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 600;
+
+  /* Автоскейл як у Figma: 1 піксель макета (мобільний 375, ПК 1440) */
+  --u: calc(100vw / 375);
+  --u-screen: min(var(--u), 100svh / 700); /* для повноекранних блоків */
+
+  /* Перший екран (числа — пікселі макета, множаться на --u-screen) */
+  --hero-title: 42;
+  --hero-text: 12;
+  --hero-number: 86;
+  --hero-title-lh: 0.9;
+  --approach-title: 38; /* великі заголовки блоків (Our approach, кнопка) */
+  --marquee-title: 93;  /* бігучий рядок (Carl Brown) */
+  --portfolio-title: 80; /* MAISON ÉLITE у портфоліо */
+  --form-title: 60;      /* LET'S CREATE SOMETHING BEAUTIFUL NOW */
+  --form-button: 38;     /* кнопка надсилання форми */
+  --footer-title: 27;    /* MÉ і контакти у футері */
+
+  /* Відступи */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 48px;
+  --space-6: 80px;
+  --space-7: 120px;
+  --section-gap: clamp(var(--space-6), 10vw, var(--space-7));
+
+  /* Сітка макета ПК: 16 колонок, поля 110, проміжок 10 (пікселі макета × --u) */
+  --grid-cols: 16;
+  --grid-offset: 110;
+  --grid-gutter: 10;
+
+  /* Сітка */
+  --container: 1280px;
+  --gutter: clamp(16px, 4vw, 40px);
+
+  /* Радіуси */
+  --radius-s: 8px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --radius-pill: 999px;
+
+  /* Анімації */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration: 0.3s;
+  /* пружина Framer { type: spring, bounce: 0, duration: 1 } (критичне згасання) */
+  --ease-spring: linear(0, 0.079, 0.236, 0.403, 0.551, 0.671, 0.764, 0.833, 0.883, 0.919, 0.944, 0.962, 0.974, 0.983, 0.988, 0.992, 0.995, 0.997, 0.998, 0.998, 1);
+  --duration-spring: 1s;
+  /* криві з Framer: кнопка форми (0.6 с), фокус поля (0.5 с), затемнення попапа (0.3 с), хрестик (0.2 с) */
+  --ease-form-button: cubic-bezier(0.69, 0.19, 0.56, 1);
+  --ease-input: cubic-bezier(0.44, 0, 0.56, 1);
+  --ease-overlay-in: cubic-bezier(0.11, 0.53, 0.88, 0.77);
+  --ease-overlay-out: cubic-bezier(0.12, 0.23, 0.5, 1);
+  /* пружини Framer { bounce: 0.2 / 0.1, duration: 1 } */
+  --ease-spring-b2: linear(0, 0.035, 0.121, 0.233, 0.354, 0.473, 0.583, 0.68, 0.762, 0.829, 0.883, 0.925, 0.956, 0.979, 0.994, 1.005, 1.011, 1.014, 1.015, 1.015, 1.014, 1.012, 1.01, 1.008, 1.007, 1.005, 1.004, 1.003, 1.002, 1.001, 1);
+  --ease-spring-b1: linear(0, 0.028, 0.096, 0.186, 0.286, 0.386, 0.481, 0.568, 0.645, 0.712, 0.77, 0.818, 0.858, 0.891, 0.917, 0.938, 0.954, 0.967, 0.977, 0.984, 0.99, 0.994, 0.997, 0.999, 1, 1.001, 1.001, 1.001, 1.002, 1.001, 1);
+
+  /* Шапка */
+  --header-height: 72px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --u: calc(100vw / 1440);
+    --u-screen: min(var(--u), 100svh / 810);
+    --hero-title: 86;
+    --hero-text: 14;
+    --hero-title-lh: 1.05;
+    --approach-title: 86;
+    --marquee-title: 233;
+    --portfolio-title: 233;
+    --form-title: 86;
+    --form-button: 50;
+    --footer-title: 33;
+  }
+}
