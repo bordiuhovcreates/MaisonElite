@@ -31,7 +31,11 @@ const masks = `--mask-d:url(${url('images/hero/logo-mask.png')});--mask-m:url(${
       <!-- Скважина як у Framer: картинка з легким блюром, зум 1 → 20 (Framer: базовий 2 × 0.5→10), плавність 2 с -->
       <div class="hero__keyhole">
         <div class="hero__zoom" data-zoom="20" data-zoom-scrub="2">
-          <img src={url('images/hero/keyhole.webp')} alt="" width="4000" height="2250" fetchpriority="high" />
+          <!-- на мобільному — легша копія 2800 px (40 КБ замість 93) -->
+          <picture>
+            <source media="(max-width: 767px)" srcset={url('images/hero/keyhole-mobile.webp')} width="2800" height="1575" />
+            <img src={url('images/hero/keyhole.webp')} alt="" width="4000" height="2250" fetchpriority="high" />
+          </picture>
         </div>
       </div>
 
@@ -108,7 +112,7 @@ const masks = `--mask-d:url(${url('images/hero/logo-mask.png')});--mask-m:url(${
   }
   /* Як у Framer: легкий постійний блюр (у Framer 0.5px, тут трохи більше), росте разом із масштабом */
   .hero__zoom { position: relative; width: 100%; height: 100%; filter: blur(1px); will-change: transform; }
-  .hero__zoom img { width: 100%; height: 100%; }
+  .hero__zoom picture, .hero__zoom img { display: block; width: 100%; height: 100%; }
 
   .hero__frame { position: absolute; inset: calc(20 * var(--s)); pointer-events: none; z-index: 4; }
   .hero__frame :global(svg) { width: 100%; height: 100%; }
