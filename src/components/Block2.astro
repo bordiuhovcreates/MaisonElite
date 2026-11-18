@@ -9,10 +9,15 @@ const { nav } = settings.header;
 const { phone, email } = settings.contacts;
 ---
 <div class="b2-slides" data-b2-slides>
+  {/* Перше фото — одразу; решта на першому кадрі не видні, тож вантажаться після load (data-defer-*, animations.js) */}
   {slides.map((s, i) => (
     <picture class="b2-slide" data-b2-slide>
-      <source media="(max-width: 767px)" srcset={url(s.imageMobile)} />
-      <img src={url(s.image)} alt="" width="1920" height="1080" fetchpriority={i === 0 ? 'high' : 'low'} decoding="async" />
+      {i === 0
+        ? <source media="(max-width: 767px)" srcset={url(s.imageMobile)} />
+        : <source media="(max-width: 767px)" data-defer-srcset={url(s.imageMobile)} />}
+      {i === 0
+        ? <img src={url(s.image)} alt="" width="1920" height="1080" fetchpriority="high" decoding="async" />
+        : <img data-defer-src={url(s.image)} alt="" width="1920" height="1080" decoding="async" />}
     </picture>
   ))}
 </div>

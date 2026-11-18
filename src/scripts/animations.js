@@ -471,6 +471,18 @@ function initSlider() {
   });
 }
 
+// data-defer-src / data-defer-srcset — картинки, яких не видно на першому кадрі: вантажаться після load,
+// щоб не забирати канал у першого екрана
+function initDeferredImages() {
+  const run = () => document.querySelectorAll('[data-defer-src], [data-defer-srcset]').forEach((el) => {
+    if (el.dataset.deferSrcset) el.srcset = el.dataset.deferSrcset;
+    if (el.dataset.deferSrc) el.src = el.dataset.deferSrc;
+  });
+  if (document.readyState === 'complete') run();
+  else addEventListener('load', run, { once: true });
+}
+
+initDeferredImages();
 initIntro();
 initCursorGlow();
 initMarquee();
